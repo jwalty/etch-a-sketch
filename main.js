@@ -1,54 +1,82 @@
 const gridContainer = document.querySelector('#gridContainer');
 let gridDiagonalSize = 16;
-let canvasSize = 800;
-uniqueColored = 0;
-
-
-
-
+let maxDesiredSize = 500;
 
 function createGrid(gridDiagonalSize) {
-
-    if (gridDiagonalSize < 0 || gridDiagonalSize > 100) {
+    
+    //grid reasonableness
+    if(gridDiagonalSize < 1 || gridDiagonalSize > 100) {
         window.alert("Try something a little more reasonable!");
-        location.reload();
+        return;
     }
-
-    uniqueColored = 0;
+    
+    //clearing grid on resize/creation
     gridContainer.innerHTML = '';
-    var startDate = new Date ();
-    var startTime = startDate.getTime();
+
+    //creating a new grid
     for (let i=0; i < gridDiagonalSize; i++) {
-        let columnOfTiles = document.createElement('div');
-        columnOfTiles.className = 'tileColumn';
+        let rowOfColumns = document.createElement('tr');
+        rowOfColumns.className = 'tileRow';
         for (let j=0; j < gridDiagonalSize; j++) {
-            let gridTile = document.createElement('div');
+            let gridTile = document.createElement('td');
             gridTile.className = 'gridTile';
-            gridTile.addEventListener('mouseover', () => {
-                if (gridTile.style.backgroundColor != 'grey') {
-                    uniqueColored++;
-                    console.log(uniqueColored);
-                    if (uniqueColored == gridDiagonalSize * gridDiagonalSize) {
-                        var date_now = new Date();
-                        var time_now = date_now.getTime();
-                        var time_diff = time_now - startTime;
-                        var seconds_elapsed = time_diff / 1000;
-                        window.alert(`It took ${seconds_elapsed} seconds to fill in ${gridDiagonalSize * gridDiagonalSize} boxes! Great job!`);
-                    }
-                }
-                gridTile.style.backgroundColor = 'grey';
-            });
-            gridTile.style.height = (canvasSize / gridDiagonalSize).toString() + "px";
-            gridTile.style.width = (canvasSize / gridDiagonalSize).toString() + "px";
-            columnOfTiles.appendChild(gridTile);
+
+            // TODO:
+            // Add switching between behaviors in-content rather than through code
+            // Current functionality requires commenting out undesirable behaviors
+
+                //BEHAVIOR: SET TO GREY
+                // gridTile.addEventListener('mouseover', () => {
+                //     gridTile.style.backgroundColor = 'grey';
+                // });
+
+                //BEHAVIOR: SET TO RANDOM COLOR
+                // gridTile.addEventListener('mouseover', () => {
+                //     let randomColorStringBuilder = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+                //     gridTile.style.backgroundColor = randomColorStringBuilder;
+                // });
+
+                //BEHAVIOR: SET TO CURRRENT COLOR FROM COLOR PICKER
+                gridTile.addEventListener('mousedown', () => {
+                    let colorPicker = document.getElementById('colorPicker');
+                    gridTile.style.backgroundColor = colorPicker.value;
+                });
+
+            // TODO: keep grid same size always, this is close but breaks
+            // due to border sizes not being accounted for.
+            gridTile.style.height = `${maxDesiredSize / gridDiagonalSize}px`;
+            gridTile.style.width = `${maxDesiredSize / gridDiagonalSize}px`;
+                
+
+            //add tiles to rows
+            rowOfColumns.appendChild(gridTile);
         }
-        gridContainer.appendChild(columnOfTiles);
+
+        //add rows to table
+        gridContainer.appendChild(rowOfColumns);
     }
 }
 
-createGrid(gridDiagonalSize);
+//Selecting size for a new grid
+const gridSizeButton = document.querySelector('#gridSizeButton');
+gridSizeButton.addEventListener('click', () => { 
+    createGrid(window.prompt("Set a desired grid size!","1-100"));
+});
 
-const button = document.querySelector('#gridButton');
-button.addEventListener('click', () => { 
-    createGrid(window.prompt("Set a desired grid size!","16"));
+//Removing grid for cleaner pics
+const borderToggle = document.querySelector('#borderToggle');
+borderToggle.addEventListener('click', () => {
+    const gridTile = document.querySelectorAll('.gridTile');
+    gridTile.forEach((individualTile) => {
+        individualTile.classList.toggle('removeBorder');
+    });
+});
+
+//Clear Grid
+const resetGridButton = document.querySelector('#resetGridButton');
+resetGridButton.addEventListener('click', () => { 
+    const gridTile = document.querySelectorAll('.gridTile');
+    gridTile.forEach((individualTile) => {
+        individualTile.style.backgroundColor = 'transparent';
+    });
 });

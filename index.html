@@ -8,12 +8,28 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
 </head>
-<body>
-    <h1>hehe drawing time :3</h1>
+<body onload="createGrid(16)">
 
-    <div id="gridContainer">
-    </div>
-    <button id="gridButton">Change Grid Size</button>
+    <header>
+        <h1>pixel art drawing board</h1>
+    </header>
+
+    <article>
+        <div id="drawingArea">
+            <div id="drawingTools">
+                <input id ="colorPicker" type="color">
+                <button id="gridSizeButton">Change Grid Size</button>
+                <button id="borderToggle">Border Toggle</button>
+                <button id="resetGridButton">Clear Grid</button>
+            </div>
+            <table id="gridContainer"></table>
+        </div>
+    </article>
+
+    <footer>
+        <a href="https://www.jwalty.dev/">jwalty.dev</a>
+    </footer>
 
 </body>
 </html>
+
